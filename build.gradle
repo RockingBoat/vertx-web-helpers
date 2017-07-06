@@ -1,0 +1,61 @@
+group 'vertx.helpers'
+version '0.4'
+
+buildscript {
+    ext.kotlin_version = '1.1.2-5'
+    ext.vertx_version = '3.4.1'
+
+    repositories {
+        mavenCentral()
+        jcenter()
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+
+    }
+}
+
+apply plugin: 'kotlin'
+apply plugin: 'java'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+    jcenter()
+
+    mavenCentral()
+}
+
+sourceSets {
+    main.kotlin.srcDirs += 'src'
+    test {
+        kotlin {
+            srcDir "test"
+        }
+    }
+}
+
+compileKotlin {
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+}
+
+dependencies {
+    compile "io.vertx:vertx-core:$vertx_version"
+    compile "io.vertx:vertx-lang-kotlin:$vertx_version"
+    compile "com.fasterxml.jackson.module:jackson-module-kotlin:2.8.7"
+    compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
+    compile "nl.komponents.kovenant:kovenant:3.3.0"
+    compile "io.vertx:vertx-web:3.4.1"
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+}
+
+defaultTasks 'run'
+
+task wrapper(type: Wrapper) {
+    gradleVersion = "3.5"
+}
