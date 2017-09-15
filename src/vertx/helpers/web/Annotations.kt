@@ -51,3 +51,6 @@ annotation class Connect(val path: String = "")
 @Retention(AnnotationRetention.RUNTIME)
 annotation class Patch(val path: String = "")
 
+@Target(AnnotationTarget.FUNCTION)
+@Retention(AnnotationRetention.RUNTIME)
+annotation class All(val path: String = "")

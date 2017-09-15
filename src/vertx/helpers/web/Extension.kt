@@ -66,19 +66,20 @@ fun HttpServer.controllers(vararg args: KClass<*>): HttpServer {
             val instance = kClass.companionObjectInstance ?: kClass.createInstance()
             instance::class.functions.map { function ->
                 function.annotations.map {
-                    val (path, method) = when (it) {
-                        is Get     -> Pair(it.path, HttpMethod.GET)
-                        is Post    -> Pair(it.path, HttpMethod.POST)
-                        is Put     -> Pair(it.path, HttpMethod.PUT)
-                        is Patch   -> Pair(it.path, HttpMethod.PATCH)
-                        is Delete  -> Pair(it.path, HttpMethod.DELETE)
-                        is Trace   -> Pair(it.path, HttpMethod.TRACE)
-                        is Connect -> Pair(it.path, HttpMethod.CONNECT)
-                        is Options -> Pair(it.path, HttpMethod.OPTIONS)
+                    val (method, path) = when (it) {
+                        is Get     -> Pair(HttpMethod.GET, it.path)
+                        is Post    -> Pair(HttpMethod.POST, it.path)
+                        is Put     -> Pair(HttpMethod.PUT, it.path)
+                        is Patch   -> Pair(HttpMethod.PATCH, it.path)
+                        is Delete  -> Pair(HttpMethod.DELETE, it.path)
+                        is Trace   -> Pair(HttpMethod.TRACE, it.path)
+                        is Connect -> Pair(HttpMethod.CONNECT, it.path)
+                        is Options -> Pair(HttpMethod.OPTIONS, it.path)
+                        is All     -> Pair(null, it.path)
                         else       -> Pair(null, null)
                     }
 
-                    if (path != null && method != null)
+                    if (path != null)
                         Triple("${ctrlConfig.path}$path", method, function)
                     else
                         null
@@ -87,8 +88,14 @@ fun HttpServer.controllers(vararg args: KClass<*>): HttpServer {
                 .flatMap { it }
                 .filterNotNull()
                 .forEach {
-                    router.route(it.second, it.first)
-                        .handler { ctx -> it.third.call(instance, ctx) }
+
+                    val method = it.second
+
+                    if (method == null) {
+                        router.route(it.first)
+                    } else {
+                        router.route(method, it.first)
+                    }.handler { ctx -> it.third.call(instance, ctx) }
                         .failureHandler { ctx ->
                             val stCode = if (ctx.statusCode() > 0) ctx.statusCode() else 500
 
