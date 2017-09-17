@@ -27,7 +27,7 @@ fun JsonObject.putObject(key: String, data: Any?) {
     if (data == null)
         this.putNull(key)
     else if (data is List<*>)
-        this.put(key, JsonArray(data))
+        this.put(key, data)
     else
         this.put(key, JsonObject.mapFrom(data))
 }
