@@ -24,10 +24,9 @@ fun HttpServerResponse.endJSend(data: Any?, code: Int = 0) {
 }
 
 fun JsonObject.putObject(key: String, data: Any?) {
-    if (data == null)
-        this.putNull(key)
-    else if (data is List<*>)
-        this.put(key, data)
-    else
-        this.put(key, JsonObject.mapFrom(data))
+    when (data) {
+        null       -> this.putNull(key)
+        is List<*> -> this.put(key, data)
+        else       -> this.put(key, JsonObject.mapFrom(data))
+    }
 }
