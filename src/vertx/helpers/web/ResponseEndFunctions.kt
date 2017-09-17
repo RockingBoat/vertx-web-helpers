@@ -3,7 +3,8 @@ package vertx.helpers.web
 import io.vertx.core.http.HttpServerResponse
 import io.vertx.core.json.Json
 import io.vertx.core.json.JsonObject
-import io.vertx.kotlin.core.json.JsonArray
+import io.vertx.kotlin.core.json.array
+import io.vertx.kotlin.core.json.Json as KJson
 
 /**
  * Created by s.suslov on 12.06.17.
@@ -16,17 +17,24 @@ fun HttpServerResponse.endWithJson(obj: Any) {
 
 fun HttpServerResponse.endJSend(data: Any?, code: Int = 0) {
     putHeader("Content-Type", "application/json; charset=utf-8")
-        .end(Json.encodePrettily(JsonObject().also {
-
+        .end(Json.encode(JsonObject().also {
             it.putObject("data", data)
             it.put("code", code)
+        }))
+}
+
+fun HttpServerResponse.endJson(data: Any?) {
+    putHeader("Content-Type", "application/json; charset=utf-8")
+        .end(Json.encode(when (data) {
+            is List<*> -> KJson.array(data)
+            else       -> JsonObject.mapFrom(data)
         }))
 }
 
 fun JsonObject.putObject(key: String, data: Any?) {
     when (data) {
         null       -> this.putNull(key)
-        is List<*> -> this.put(key, data)
+        is List<*> -> this.put(key, KJson.array(data))
         else       -> this.put(key, JsonObject.mapFrom(data))
     }
 }
