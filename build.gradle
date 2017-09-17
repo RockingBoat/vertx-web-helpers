@@ -1,9 +1,10 @@
 group 'vertx.helpers'
-version '0.7'
+version '0.7.1'
 
 buildscript {
-    ext.kotlin_version = '1.1.2-5'
-    ext.vertx_version = '3.4.1'
+    ext.kotlin_version = '1.1.4-3'
+    ext.vertx_version = '3.4.2'
+    ext.jackson_module_kotlin = '2.9.1'
 
     repositories {
         mavenCentral()
@@ -45,7 +46,7 @@ compileKotlin {
 dependencies {
     compile "io.vertx:vertx-core:$vertx_version"
     compile "io.vertx:vertx-lang-kotlin:$vertx_version"
-    compile "com.fasterxml.jackson.module:jackson-module-kotlin:2.8.7"
+    compile "com.fasterxml.jackson.module:jackson-module-kotlin:$jackson_module_kotlin"
     compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
     compile "io.vertx:vertx-web:3.4.1"
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
@@ -61,9 +62,9 @@ task wrapper(type: Wrapper) {
 
 publish {
     repoName = "web"
-    groupId = 'vertx.helpers'
+    groupId = group
     artifactId = 'web'
-    publishVersion = '0.7'
+    publishVersion = version
     desc = ''
     licences = ['BSD']
     website = 'https://github.com/suslovsergey/vertx-web-helpers'
