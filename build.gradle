@@ -62,9 +62,9 @@ task wrapper(type: Wrapper) {
 
 publish {
     repoName = "web"
-    groupId = group
+    groupId = 'vertx.helpers'
     artifactId = 'web'
-    publishVersion = version
+    publishVersion = '0.7.1'
     desc = ''
     licences = ['BSD']
     website = 'https://github.com/suslovsergey/vertx-web-helpers'
