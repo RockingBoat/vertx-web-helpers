@@ -12,7 +12,7 @@ import io.vertx.kotlin.core.json.Json as KJson
 
 
 fun HttpServerResponse.endWithJson(obj: Any) {
-    putHeader("Content-Type", "application/json; charset=utf-8").end(Json.encodePrettily(obj))
+    putHeader("Content-Type", "application/json; charset=utf-8").end(Json.encode(obj))
 }
 
 fun HttpServerResponse.endJSend(data: Any?, code: Int = 0) {
@@ -23,13 +23,15 @@ fun HttpServerResponse.endJSend(data: Any?, code: Int = 0) {
         }))
 }
 
-fun HttpServerResponse.endJson(data: Any?) {
-    putHeader("Content-Type", "application/json; charset=utf-8")
-        .end(Json.encode(when (data) {
-            is List<*> -> KJson.array(data)
-            else       -> JsonObject.mapFrom(data)
-        }))
-}
+
+// TODO: Remove
+//fun HttpServerResponse.endJson(data: Any?) {
+//    putHeader("Content-Type", "application/json; charset=utf-8")
+//        .end(Json.encode(when (data) {
+//            is List<*> -> KJson.array(data)
+//            else       -> JsonObject.mapFrom(data)
+//        }))
+//}
 
 fun JsonObject.putObject(key: String, data: Any?) {
     when (data) {
