@@ -1,6 +1,6 @@
 Under construction
 
-# Vert.X Web Helpers
+# Vert.X Routing/Web Helpers
 
 ## Description
 
@@ -73,6 +73,43 @@ compile 'vertx.helpers:web:0.7.1'
 ## Usage
 
 ### Annotations
+
+All Annotation get input variable: path (`String`)
+
+- @Controller
+- @Get
+- @Post
+- @Post
+- @Put
+- @Options
+- @Head
+- @Delete
+- @Trace
+- @Connect
+- @Patch
+- @All
+
+- @Route
+
+
+### Response helpers
+
+`endWithJson(Object)` - response with Json Object
+
+`endJSend(Object, Int)` - response with struct
+
+```json
+{
+  "data": ANY,
+  "code": Int
+}
+``` 
+
+### Other Helper
+
+`RoutingContext.header(String)` - Get header value
+`RoutingContext.param(String)` - Get value of CGI param (no array :() 
+`RoutingContext.body<T>())` - Get and convert json body to instance of class T
 
 
 ## Example

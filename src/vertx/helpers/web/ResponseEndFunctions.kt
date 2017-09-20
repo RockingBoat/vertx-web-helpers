@@ -15,6 +15,7 @@ fun HttpServerResponse.endWithJson(obj: Any) {
     putHeader("Content-Type", "application/json; charset=utf-8").end(Json.encode(obj))
 }
 
+@Suppress("unused")
 fun HttpServerResponse.endJSend(data: Any?, code: Int = 0) {
     putHeader("Content-Type", "application/json; charset=utf-8")
         .end(Json.encode(JsonObject().also {

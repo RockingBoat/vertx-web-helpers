@@ -13,7 +13,7 @@ annotation class Controller(val path: String = "/")
 
 @Target(AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.RUNTIME)
-annotation class Route(val mehod: HttpMethod, val path: String = "")
+annotation class Route(val method: HttpMethod, val path: String = "")
 
 @Target(AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.RUNTIME)
