@@ -15,6 +15,7 @@ fun HttpServerResponse.endWithJson(obj: Any) {
     putHeader("Content-Type", "application/json; charset=utf-8").end(Json.encode(obj))
 }
 
+@Suppress("unused")
 fun HttpServerResponse.endJSend(data: Any?, code: Int = 0) {
     putHeader("Content-Type", "application/json; charset=utf-8")
         .end(Json.encode(JsonObject().also {
@@ -22,16 +23,6 @@ fun HttpServerResponse.endJSend(data: Any?, code: Int = 0) {
             it.put("code", code)
         }))
 }
-
-
-// TODO: Remove
-//fun HttpServerResponse.endJson(data: Any?) {
-//    putHeader("Content-Type", "application/json; charset=utf-8")
-//        .end(Json.encode(when (data) {
-//            is List<*> -> KJson.array(data)
-//            else       -> JsonObject.mapFrom(data)
-//        }))
-//}
 
 fun JsonObject.putObject(key: String, data: Any?) {
     when (data) {

@@ -24,6 +24,7 @@ import kotlin.reflect.full.isSuperclassOf
  */
 val mapper = ObjectMapper().registerKotlinModule()
 
+@Suppress("unused")
 fun HttpServer.defaultRouter(): Router {
     val instance = Vertx.currentContext().get<Router>("router")
     if (instance == null) {
@@ -35,7 +36,8 @@ fun HttpServer.defaultRouter(): Router {
     return instance
 }
 
-fun HttpServer.enableCorsGlobal(): HttpServer {
+@Suppress("unused")
+fun HttpServer.enableCORSGlobal(): HttpServer {
     val router = this.defaultRouter()
     router.route().handler(CorsHandler.create("*")
         .allowedMethod(io.vertx.core.http.HttpMethod.GET)
@@ -55,6 +57,7 @@ fun HttpServer.enableCorsGlobal(): HttpServer {
     return this
 }
 
+@Suppress("unused")
 fun HttpServer.controllers(vararg args: KClass<*>): HttpServer {
     val router = this.defaultRouter()
     router.route().handler(BodyHandler.create())
@@ -75,7 +78,9 @@ fun HttpServer.controllers(vararg args: KClass<*>): HttpServer {
                         is Trace   -> Pair(HttpMethod.TRACE, it.path)
                         is Connect -> Pair(HttpMethod.CONNECT, it.path)
                         is Options -> Pair(HttpMethod.OPTIONS, it.path)
+                        is Head    -> Pair(HttpMethod.HEAD, it.path)
                         is All     -> Pair(null, it.path)
+                        is Route   -> Pair(it.method, it.path)
                         else       -> Pair(null, null)
                     }
 
@@ -128,11 +133,13 @@ fun HttpServer.controllers(vararg args: KClass<*>): HttpServer {
     }
 }
 
+@Suppress("unused")
 inline fun <reified T : Any> RoutingContext.param(name: String): T? {
     val sValue = this.request().getParam(name.toLowerCase()) ?: return null
     return convertStringValue(sValue)
 }
 
+@Suppress("unused")
 inline fun <reified T : Any> RoutingContext.header(name: String): T? {
     val sValue = this.request().getHeader(name.toLowerCase()) ?: return null
     return convertStringValue(sValue)
@@ -149,8 +156,8 @@ inline fun <reified T : Any> convertStringValue(value: String): T? {
     }
 }
 
-inline fun <reified T : Any> RoutingContext.body(): T = mapper.readValue<T>(this.bodyAsString)
+@Suppress("unused")
+inline fun <reified T : Any> RoutingContext.body(): T = mapper.readValue(this.bodyAsString)
 
-data class RouteItem(val path: String, val method: HttpMethod, val function: KFunction<*>)
 
 
