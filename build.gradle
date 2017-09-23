@@ -1,10 +1,12 @@
-group 'vertx.helpers'
-version '0.7.1'
+group 'rockingboat.vertx.helpers'
+version '0.7.3'
 
 buildscript {
-    ext.kotlin_version = '1.1.4-3'
+    ext.kotlin_version = '1.1.50'
     ext.vertx_version = '3.4.2'
     ext.jackson_module_kotlin = '2.9.1'
+    ext.junit_version = '4.11'
+
 
     repositories {
         mavenCentral()
@@ -48,24 +50,28 @@ dependencies {
     compile "io.vertx:vertx-lang-kotlin:$vertx_version"
     compile "com.fasterxml.jackson.module:jackson-module-kotlin:$jackson_module_kotlin"
     compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
-    compile "io.vertx:vertx-web:3.4.1"
+    compile "io.vertx:vertx-web:$vertx_version"
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
-    testCompile group: 'junit', name: 'junit', version: '4.11'
+    testCompile "junit:junit:$junit_version"
 }
 
 defaultTasks 'run'
 
 task wrapper(type: Wrapper) {
-    gradleVersion = "3.5"
+    gradleVersion = "4.2"
 }
 
+
 publish {
-    repoName = "web"
-    groupId = 'vertx.helpers'
+    bintrayUser = 'suslovsergey'
+    userOrg = 'rockingboat'
+    repoName = 'maven'
+    groupId = 'rockingboat.vertx.helpers'
     artifactId = 'web'
-    publishVersion = '0.7.1'
-    desc = ''
+    publishVersion = '0.7.3'
+    desc = 'Vert.x routing/life helpers'
     licences = ['BSD']
-    website = 'https://github.com/suslovsergey/vertx-web-helpers'
+    website = 'https://github.com/RockingBoat/vertx-web-helpers'
+    dryRun = false
 }

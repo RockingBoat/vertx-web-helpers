@@ -23,9 +23,9 @@ All code write on Kotlin
                     <snapshots>
                         <enabled>false</enabled>
                     </snapshots>
-                    <id>bintray-suslovsergey-web</id>
+                    <id>bintray-rockingboat-maven</id>
                     <name>bintray</name>
-                    <url>https://dl.bintray.com/suslovsergey/web</url>
+                    <url>https://dl.bintray.com/rockingboat/maven</url>
                 </repository>
             </repositories>
             <pluginRepositories>
@@ -33,9 +33,9 @@ All code write on Kotlin
                     <snapshots>
                         <enabled>false</enabled>
                     </snapshots>
-                    <id>bintray-suslovsergey-web</id>
+                    <id>bintray-rockingboat-maven</id>
                     <name>bintray-plugins</name>
-                    <url>https://dl.bintray.com/suslovsergey/web</url>
+                    <url>https://dl.bintray.com/rockingboat/maven</url>
                 </pluginRepository>
             </pluginRepositories>
             <id>bintray</id>
@@ -49,9 +49,9 @@ All code write on Kotlin
 
 ``` xml
 <dependency>
-  <groupId>vertx.helpers</groupId>
+  <groupId>rockingboat.vertx.helpers</groupId>
   <artifactId>web</artifactId>
-  <version>0.7.1</version>
+  <version>0.7.2</version>
   <type>pom</type>
 </dependency>
 ```
@@ -61,13 +61,14 @@ All code write on Kotlin
 ``` gradle
 repositories {
     maven {
-        url  "https://dl.bintray.com/suslovsergey/web" 
+        url  "https://dl.bintray.com/rockingboat/maven" 
     }
 }
+      
 ```
 
 ``` gradle
-compile 'vertx.helpers:web:0.7.1'
+compile 'rockingboat.vertx.helpers:web:0.7.2'   
 ```
 
 ## Usage
