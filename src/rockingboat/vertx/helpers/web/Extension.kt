@@ -1,4 +1,4 @@
-package vertx.helpers.web
+package rockingboat.vertx.helpers.web
 
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -81,7 +81,7 @@ fun HttpServer.controllers(vararg args: KClass<*>): HttpServer {
                         is Head    -> Pair(HttpMethod.HEAD, it.path)
                         is All     -> Pair(null, it.path)
                         is Route   -> Pair(it.method, it.path)
-                        else       -> Pair(null, null)
+                        else                                     -> Pair(null, null)
                     }
 
                     if (path != null)
