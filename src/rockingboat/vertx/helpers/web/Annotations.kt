@@ -6,51 +6,50 @@ package rockingboat.vertx.helpers.web
 
 import io.vertx.core.http.HttpMethod
 
-
 @Target(AnnotationTarget.CLASS)
 @Retention(AnnotationRetention.RUNTIME)
 annotation class Controller(val path: String = "/")
 
 @Target(AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.RUNTIME)
-annotation class Route(val method: HttpMethod, val path: String = "")
+annotation class Route(val method: HttpMethod, val path: String = "", val enableCors: Boolean = false)
 
 @Target(AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.RUNTIME)
-annotation class Get(val path: String = "")
+annotation class Get(val path: String = "", val enableCors: Boolean = false)
 
 @Target(AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.RUNTIME)
-annotation class Post(val path: String = "")
+annotation class Post(val path: String = "", val enableCors: Boolean = false)
 
 @Target(AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.RUNTIME)
-annotation class Put(val path: String = "")
+annotation class Put(val path: String = "", val enableCors: Boolean = false)
 
 @Target(AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.RUNTIME)
-annotation class Options(val path: String = "")
+annotation class Options(val path: String = "", val enableCors: Boolean = false)
 
 @Target(AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.RUNTIME)
-annotation class Head(val path: String = "")
+annotation class Head(val path: String = "", val enableCors: Boolean = false)
 
 @Target(AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.RUNTIME)
-annotation class Delete(val path: String = "")
+annotation class Delete(val path: String = "", val enableCors: Boolean = false)
 
 @Target(AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.RUNTIME)
-annotation class Trace(val path: String = "")
+annotation class Trace(val path: String = "", val enableCors: Boolean = false)
 
 @Target(AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.RUNTIME)
-annotation class Connect(val path: String = "")
+annotation class Connect(val path: String = "", val enableCors: Boolean = false)
 
 @Target(AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.RUNTIME)
-annotation class Patch(val path: String = "")
+annotation class Patch(val path: String = "", val enableCors: Boolean = false)
 
 @Target(AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.RUNTIME)
-annotation class All(val path: String = "")
+annotation class All(val path: String = "", val enableCors: Boolean = false)

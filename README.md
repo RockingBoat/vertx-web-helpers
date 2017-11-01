@@ -95,7 +95,7 @@ All Annotation get input variable: path (`String`)
 
 ### Response helpers
 
-`endWithJson(Object)` - response with Json Object
+`jsonOutput(Object)` - response with Json Object
 
 `endJSend(Object, Int)` - response with struct
 
