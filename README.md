@@ -51,7 +51,7 @@ All code write on Kotlin
 <dependency>
   <groupId>rockingboat.vertx.helpers</groupId>
   <artifactId>web</artifactId>
-  <version>0.7.2</version>
+  <version>0.8.0</version>
   <type>pom</type>
 </dependency>
 ```
@@ -68,7 +68,7 @@ repositories {
 ```
 
 ``` gradle
-compile 'rockingboat.vertx.helpers:web:0.7.2'   
+compile 'rockingboat.vertx.helpers:web:0.8.0'   
 ```
 
 ## Usage
