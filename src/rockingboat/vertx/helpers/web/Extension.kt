@@ -37,24 +37,24 @@ fun HttpServer.defaultRouter(): Router {
 }
 
 @Suppress("unused")
-fun HttpServer.enableCORSGlobal(corsHost: String, allowCredentials: Boolean): HttpServer {
+fun HttpServer.enableCORSGlobal(corsHost: String, allowCredentials: Boolean = false): HttpServer {
     val router = this.defaultRouter()
     router.route().handler(CorsHandler.create(corsHost)
-                                   .allowedMethod(io.vertx.core.http.HttpMethod.GET)
-                                   .allowedMethod(io.vertx.core.http.HttpMethod.POST)
-                                   .allowedMethod(io.vertx.core.http.HttpMethod.OPTIONS)
-                                   .allowedMethod(io.vertx.core.http.HttpMethod.PUT)
-                                   .allowedMethod(io.vertx.core.http.HttpMethod.CONNECT)
-                                   .allowedMethod(io.vertx.core.http.HttpMethod.TRACE)
-                                   .allowedMethod(io.vertx.core.http.HttpMethod.DELETE)
-                                   .allowedMethod(io.vertx.core.http.HttpMethod.HEAD)
-                                   .allowedMethod(io.vertx.core.http.HttpMethod.OTHER)
-                                   .allowedMethod(io.vertx.core.http.HttpMethod.PATCH)
-                                   .allowCredentials(allowCredentials)
-                                   .allowedHeader("Access-Control-Allow-Method")
-                                   .allowedHeader("Access-Control-Allow-Origin")
-                                   .allowedHeader("Access-Control-Allow-Credentials")
-                                   .allowedHeader("Content-Type"))
+            .allowedMethod(io.vertx.core.http.HttpMethod.GET)
+            .allowedMethod(io.vertx.core.http.HttpMethod.POST)
+            .allowedMethod(io.vertx.core.http.HttpMethod.OPTIONS)
+            .allowedMethod(io.vertx.core.http.HttpMethod.PUT)
+            .allowedMethod(io.vertx.core.http.HttpMethod.CONNECT)
+            .allowedMethod(io.vertx.core.http.HttpMethod.TRACE)
+            .allowedMethod(io.vertx.core.http.HttpMethod.DELETE)
+            .allowedMethod(io.vertx.core.http.HttpMethod.HEAD)
+            .allowedMethod(io.vertx.core.http.HttpMethod.OTHER)
+            .allowedMethod(io.vertx.core.http.HttpMethod.PATCH)
+            .allowCredentials(allowCredentials)
+            .allowedHeader("Access-Control-Allow-Method")
+            .allowedHeader("Access-Control-Allow-Origin")
+            .allowedHeader("Access-Control-Allow-Credentials")
+            .allowedHeader("Content-Type"))
     return this
 }
 
@@ -82,6 +82,7 @@ sealed class ControllerMethod {
 fun HttpServer.controllers(vararg args: KClass<*>): HttpServer {
     val router = this.defaultRouter()
     router.route().handler(BodyHandler.create())
+    val optionsPaths = mutableListOf<String>()
     args.forEach { kClass ->
 
         kClass.findAnnotation<Controller>()?.let { ctrlConfig ->
@@ -90,18 +91,18 @@ fun HttpServer.controllers(vararg args: KClass<*>): HttpServer {
             instance::class.functions.map { function ->
                 function.annotations.map {
                     val controllerMethod = when (it) {
-                        is Get     -> ControllerMethod.Concrete(HttpMethod.GET, it.path, function)
-                        is Post    -> ControllerMethod.Concrete(HttpMethod.POST, it.path, function)
-                        is Put     -> ControllerMethod.Concrete(HttpMethod.PUT, it.path, function)
-                        is Patch   -> ControllerMethod.Concrete(HttpMethod.PATCH, it.path, function)
-                        is Delete  -> ControllerMethod.Concrete(HttpMethod.DELETE, it.path, function)
-                        is Trace   -> ControllerMethod.Concrete(HttpMethod.TRACE, it.path, function)
+                        is Get -> ControllerMethod.Concrete(HttpMethod.GET, it.path, function)
+                        is Post -> ControllerMethod.Concrete(HttpMethod.POST, it.path, function)
+                        is Put -> ControllerMethod.Concrete(HttpMethod.PUT, it.path, function)
+                        is Patch -> ControllerMethod.Concrete(HttpMethod.PATCH, it.path, function)
+                        is Delete -> ControllerMethod.Concrete(HttpMethod.DELETE, it.path, function)
+                        is Trace -> ControllerMethod.Concrete(HttpMethod.TRACE, it.path, function)
                         is Connect -> ControllerMethod.Concrete(HttpMethod.CONNECT, it.path, function)
                         is Options -> ControllerMethod.Concrete(HttpMethod.OPTIONS, it.path, function)
-                        is Head    -> ControllerMethod.Concrete(HttpMethod.HEAD, it.path, function)
-                        is All     -> ControllerMethod.All(it.path, function)
-                        is Route   -> ControllerMethod.Concrete(it.method, it.path, function)
-                        else       -> null
+                        is Head -> ControllerMethod.Concrete(HttpMethod.HEAD, it.path, function)
+                        is All -> ControllerMethod.All(it.path, function)
+                        is Route -> ControllerMethod.Concrete(it.method, it.path, function)
+                        else -> null
                     }
                     controllerMethod?.setControllerPath(ctrlConfig.path)
                 }
@@ -112,28 +113,22 @@ fun HttpServer.controllers(vararg args: KClass<*>): HttpServer {
 
                         when (it) {
                             is ControllerMethod.Concrete -> router.route(it.method, it.path)
-                            is ControllerMethod.All      -> router.route(it.path)
+                            is ControllerMethod.All -> router.route(it.path)
                         }
                                 .handler { ctx -> it.function.call(instance, ctx) }
                                 .failureHandler { ctx ->
                                     ctx.jsonResponse(ctx.failure()?.message ?: "Unknown Error",
-                                                     -1,
-                                                     if (ctx.statusCode() > 0) ctx.statusCode() else 500
-                                                    )
+                                            -1,
+                                            if (ctx.statusCode() > 0) ctx.statusCode() else 500
+                                    )
 
                                 }
 
 
-                        if (it.enableCors) {
+                        if (it.enableCors && !optionsPaths.contains(it.path)) {
                             router.route(HttpMethod.OPTIONS, it.path)
-                                    .handler { ctx -> it.function.call(instance, ctx) }
-                                    .failureHandler { ctx ->
-                                        ctx.jsonResponse(ctx.failure()?.message ?: "Unknown Error",
-                                                         -1,
-                                                         if (ctx.statusCode() > 0) ctx.statusCode() else 500
-                                                        )
-
-                                    }
+                                    .handler { ctx -> ctx.response().end("") }
+                            optionsPaths.add(it.path)
                         }
                     }
         }
@@ -161,10 +156,10 @@ inline fun <reified T : Any> convertStringValue(value: String): T? {
     val clazz = T::class
     return when {
         clazz.isSuperclassOf(String::class) -> value as T
-        clazz.isSuperclassOf(Long::class)   -> value.toLongOrNull() as T
-        clazz.isSuperclassOf(Int::class)    -> value.toIntOrNull() as T
-        clazz.isSuperclassOf(Short::class)  -> value.toShortOrNull() as T
-        else                                -> null
+        clazz.isSuperclassOf(Long::class) -> value.toLongOrNull() as T
+        clazz.isSuperclassOf(Int::class) -> value.toIntOrNull() as T
+        clazz.isSuperclassOf(Short::class) -> value.toShortOrNull() as T
+        else -> null
     }
 }
 
