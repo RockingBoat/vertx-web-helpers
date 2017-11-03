@@ -118,12 +118,10 @@ fun HttpServer.controllers(vararg args: KClass<*>): HttpServer {
                                 .handler { ctx -> it.function.call(instance, ctx) }
                                 .failureHandler { ctx ->
                                     ctx.jsonResponse(ctx.failure()?.message ?: "Unknown Error",
-                                            -1,
-                                            if (ctx.statusCode() > 0) ctx.statusCode() else 500
+                                            if (ctx.statusCode() > 0) ctx.statusCode() else 500,
+                                            -1
                                     )
-
                                 }
-
 
                         if (it.enableCors && !optionsPaths.contains(it.path)) {
                             router.route(HttpMethod.OPTIONS, it.path)
@@ -166,5 +164,7 @@ inline fun <reified T : Any> convertStringValue(value: String): T? {
 @Suppress("unused")
 inline fun <reified T : Any> RoutingContext.body(): T = mapper.readValue(this.bodyAsString)
 
+@Suppress("unused")
+fun RoutingContext.body(cls: KClass<*>) = mapper.readValue(this.bodyAsString, cls.java)
 
 
